@@ -69,7 +69,7 @@ class ConfigXML:
                     "alwaysTop":"False",
                     "weekOffset":"-10",
                     "skin": os.path.dirname(os.path.abspath(__file__)) + "/default",
-                    "sound": os.path.dirname(os.path.abspath(__file__)) + "/sound.wav",
+                    "sound": os.path.dirname(os.path.abspath(__file__)) + "/sound",
                     "windowDecorate":"True",
                     "annotationType":"0",
                     "soundCutOut":"False",
@@ -167,6 +167,8 @@ class moeclock:
     萌え時計クラス
     '''
     wallpaper_list = []
+    # 音声ファイル格納用関数
+    tsound_list = []
     wlist = []
     sw = 0
     use_wallpaper_list = []
@@ -295,6 +297,7 @@ class moeclock:
         self.fcSkin.set_current_folder(self.skin+"/")
         self.fcSound = self.wTree.get_object ("fcSound")
         self.fcSound.set_filename(self.sound)
+        self.fcSound.set_current_folder(self.sound+"/")
         self.cbSoundCutOut = self.wTree.get_object ("cbSoundCutOut")
         self.cbSoundCutOut.set_active(self.soundCutOut)
         self.sclCalloutSize = self.wTree.get_object ("sclCalloutSize")
@@ -311,17 +314,13 @@ class moeclock:
         self.cbRoundWindow.set_active(self.roundWindow)
         #フィルタの作成
         self.allFilter = Gtk.FileFilter()
-        self.waveFilter = Gtk.FileFilter()
 
-        self.allFilter.set_name(_("All Files"))
+        self.allFilter.set_name(_("All Folder"))
         self.allFilter.add_pattern("*")
 
-        self.waveFilter.set_name(_("Sound Files"))
-        self.waveFilter.add_pattern("*.wav")
 
-        self.fcSound.add_filter(self.waveFilter)
         self.fcSound.add_filter(self.allFilter)
-        self.fcSound.set_filter(self.waveFilter)
+        self.fcSound.set_filter(self.allFilter)
         self.cbCalloutPosition.set_active_id(str(self.annotationType))
         self.preferences = preferencesDialog
         #Create our dictionay and connect it
@@ -344,9 +343,22 @@ class moeclock:
                         self.wallpaper_list.append(base+"/"+img)
                     else:
                         self.wallpaper_list.append(base+img)
+
+        #音声一覧を作成
+        if os.path.isdir(self.sound) == False:
+            self.sound = os.path.dirname(os.path.abspath(__file__)) + "/sound"
+        for base, path, sndPath in os.walk(self.sound+"/"):
+            for snd in sndPath:
+                if snd.find("wav") > 0:
+                    if base[-1] != '/' :
+                        self.tsound_list.append(base+"/"+snd)
+                    else:
+                        self.tsound_list.append(base+snd)
+                
         #tmplist = os.listdir(WALLPAPER_PATH+"/")
         #self.wallpaper_list = [ WALLPAPER_PATH+"/" +x for x in tmplist if x.find(".jpg") >= 0 or x.find(".JPG") >= 0 or x.find(".png") >= 0 or x.find(".PNG") >= 0]
         logging.debug(str(self.wallpaper_list))
+        logging.debug(str(self.tsound_list))
         self.timeout = GLib.timeout_add_seconds(int(self.timeout_interval),self.timeout_callback,self)
 
     def __getitem__(self, key):
@@ -405,7 +417,8 @@ class moeclock:
             cmdStr = SOUND_PLAY + " "+ soundPath
             self.execCommand(cmdStr)
         if os.path.exists(self.sound) :
-            soundFile = self.fcSound.get_filename()
+            #soundFile = self.fcSound.get_filename()
+            soundFile = random.choices(self.tsound_list)[0]
             cmdStr = SOUND_PLAY + " " + soundFile
             self.execCommand(cmdStr)
 
