@@ -920,7 +920,8 @@ class moeclock:
                 soundPath = os.path.dirname(os.path.abspath(__file__)) + "/sound/nosound.wav"
             cmdStr = SOUND_PLAY + " " + soundPath
             self.execCommand(cmdStr)
-        cmdStr = SOUND_PLAY + " " + self.sound
+        #cmdStr = SOUND_PLAY + " " + self.sound
+        cmdStr = SOUND_PLAY + " " + random.choices(self.tsound_list)[0]
         self.execCommand(cmdStr)
 
     def _buildWallPaper(self,wallpaper):
