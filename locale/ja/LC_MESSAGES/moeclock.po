@@ -46,8 +46,8 @@ msgid "(Wed)"
 msgstr "（水）"
 
 #: moeclock.py:315
-msgid "All Files"
-msgstr "すべてのファイル"
+msgid "All Folder"
+msgstr "すべてのフォルダ"
 
 #: moeclock.py:318
 msgid "Sound Files"
@@ -221,8 +221,8 @@ msgid "Select time signal audio"
 msgstr "時報音声選択"
 
 #: moeclockdlg.glade.h:10
-msgid "Select time signal audio file (WAVE only)"
-msgstr "時報音声ファイルの選択(WAVE形式のみ)"
+msgid "Select time signal audio file"
+msgstr "時報音声ファイルが格納されたフォルダ選択"
 
 #: moeclockdlg.glade.h:11
 msgid "Select skin"
